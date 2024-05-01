@@ -1,7 +1,14 @@
 #import modules
 import random
+import telebot
 
+from telebot import types
+from icecream import ic
 
+#create bot
+bot = telebot.TeleBot('6042698676:AAEfUDOR2v2KqOkxRfpC6s1qn6hYpoU7Pdk')
+#disable ic
+ic.disable()
 
 #create class for races
 class Races():
