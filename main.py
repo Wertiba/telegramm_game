@@ -4,8 +4,10 @@ import telebot
 
 from telebot import types
 from icecream import ic
+from messeges import All_messeges as messages
 
-#create bot
+#create bot and my user id
+my_user_id = 5900045265
 bot = telebot.TeleBot('7177989754:AAFO8VfvNuLfa7hVyszlwZjz6UEL-kJ6I_s')
 #disable ic
 ic.disable()
@@ -30,13 +32,17 @@ fire_regiments = Races('огнеполки', 'just_title', 'just_number', '850',
 races_list = [vikings, peoples, nigers, polars, fire_regiments]
 
 #function for command start
+#delete reply markup: murkup = types.ReplyKeyboardRemove()
 @bot.message_handler(commands=['start'])
 def start(message):
-    murkup = types.ReplyKeyboardMarkup()
-    btn1 = types.KeyboardButton('x')
-    btn2 = types.KeyboardButton('y')
-    murkup.row(btn1, btn2)
+    murkup = types.InlineKeyboardMarkup
 
-    bot.send_message(message.chat.id, f'Здравствуйте, {message.from_user.first_name}', reply_markup=murkup)
+    bot.send_message(message.chat.id, messages['start_message'])
+
+
+
+
+
+
 
 bot.polling(none_stop=True)
