@@ -22,16 +22,36 @@ class Races():
         self.power = power
         self.health = health
 
-#creating class objects
+
+#create class for enemies
+class Enemy():
+    def __init__(self, name, power, health):
+        self.name = name
+        self.power = power
+        self.health = health
+
+
+
+
+
+
+
+#create races objects
 vikings = Races('викинги', 'just_title', 'just_number', '650', '450')
 peoples = Races('современники', 'just_title', 'just_number', '800', '300')
 nigers = Races('негры', 'just_title', 'just_number', '600', '800')
 polars = Races('полярники', 'just_title', 'just_number', '600', '600')
 fire_regiments = Races('огнеполки', 'just_title', 'just_number', '850', '200')
 
-#list with all races
-races_list = [vikings, peoples, nigers, polars, fire_regiments]
+#create enemies objects
+human = Enemy('человек', '400', '300')
+orc = Enemy('орк', '150', '800')
+undead = Enemy('нежить', '600', '200')
+elf = Enemy('эльф', '400', '100')
 
+#list with all objects
+races_list = [vikings, peoples, nigers, polars, fire_regiments]
+enemies_list = [human, orc, undead, elf]
 
 
 
@@ -49,8 +69,11 @@ def start(message):
     btn1 = types.InlineKeyboardButton('Информация', callback_data='bot_info')
     btn2 = types.InlineKeyboardButton('Поддержать создателя', callback_data='donate_me')
     btn3 = types.InlineKeyboardButton('Начать игру', callback_data='start_game')
-    murkup.row(btn1, btn2)
+    btn4 = types.InlineKeyboardButton('Тех.поддержка', callback_data='tech_help')
+
     murkup.row(btn3)
+    murkup.row(btn1, btn4)
+    murkup.row(btn2)
 
     bot.send_message(message.chat.id, f'Приветствую тебя, {message.from_user.first_name}')
     bot.send_message(message.chat.id, messages['start_message'], reply_markup=murkup)
@@ -69,6 +92,9 @@ def callback_query(callback):
 
     elif callback.data == 'start_game':
         bot.send_message(message.chat.id, 'Ок, выбирай рассу)')
+
+    elif callback.data == 'tech_help':
+        bot.send_message(message.chat.id, 'Напиши на мой айди)')
 
 
 
