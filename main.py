@@ -27,7 +27,8 @@ try:
     )
     print('connection successful')
 except Exception as ex:
-    print('connection isn\'t successful')
+    print(ex)
+    bot.send_message(my_user_id, str(ex))
 
 #creating table with users
 # with connection.cursor() as cursor:
@@ -79,9 +80,54 @@ enemies_list = [human, orc, undead, elf]
 
 
 
+#function for delete data
+def delete_data(table_name):
+    with connection.cursor() as cursor:
+        delete_query = f"DELETE FROM {table_name} WHERE nick = 1"
+        cursor.execute(delete_query)
+        connection.commit()
+
+
+    connection.close()
+
+# delete_data('users')
+
+#function for select user's ip
+def select_ip(message):
+    try:
+        check = True
+        ic.enable()
+        with connection.cursor() as cursor:
+            select_query = "SELECT * FROM users"
+            cursor.execute(select_query)
+            rows = cursor.fetchall()
+            for row in rows:
+                if str(message.chat.id) == str(row['ip']):
+                    check = False
+                    break
+
+            print('selected successful')
+
+            #insert query
+            if check == True:
+                insert_query = f"INSERT INTO users (nick, ip) VALUES ('1', {str(message.chat.id)});"
+                cursor.execute(insert_query)
+                connection.commit()
+                print('insert was successful')
 
 
 
+            cursor.execute('SELECT * FROM users')
+            rows = cursor.fetchall()
+            for row in rows:
+                ic(row)
+
+            connection.close()
+
+    #sending exception for me
+    except Exception as ex:
+        print(ex)
+        bot.send_message(my_user_id, str(ex))
 
 
 #function for command start
@@ -98,6 +144,9 @@ def start(message):
     murkup.row(btn3)
     murkup.row(btn1, btn4)
     murkup.row(btn2)
+
+    #check ip in db
+    select_ip(message)
 
     bot.send_message(message.chat.id, f'Приветствую тебя, {message.from_user.first_name}')
     bot.send_message(message.chat.id, messages['start_message'], reply_markup=murkup)
