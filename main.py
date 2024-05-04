@@ -87,41 +87,37 @@ def delete_data(table_name):
         cursor.execute(delete_query)
         connection.commit()
 
-
     connection.close()
-
 # delete_data('users')
+
+#function for select all
+def select_all(cursor):
+    ic.enable()
+    cursor.execute('SELECT * FROM users')
+    rows = cursor.fetchall()
+    for row in rows:
+        ic(row)
+
 
 #function for select user's ip
 def select_ip(message):
     try:
-        check = True
-        ic.enable()
         with connection.cursor() as cursor:
-            select_query = "SELECT * FROM users"
+            select_query = f"SELECT * FROM users WHERE ip = {str(message.chat.id)}"
             cursor.execute(select_query)
             rows = cursor.fetchall()
-            for row in rows:
-                if str(message.chat.id) == str(row['ip']):
-                    check = False
-                    break
 
             print('selected successful')
+            quantity_rows = len(rows)
 
             #insert query
-            if check == True:
+            if quantity_rows == 0:
                 insert_query = f"INSERT INTO users (nick, ip) VALUES ('1', {str(message.chat.id)});"
                 cursor.execute(insert_query)
                 connection.commit()
                 print('insert was successful')
 
-
-
-            cursor.execute('SELECT * FROM users')
-            rows = cursor.fetchall()
-            for row in rows:
-                ic(row)
-
+            select_all(cursor)
             connection.close()
 
     #sending exception for me
