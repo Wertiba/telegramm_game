@@ -118,13 +118,14 @@ def select_ip(message):
                 print('insert was successful')
 
             select_all(cursor)
-            connection.close()
 
     #sending exception for me
     except Exception as ex:
         print(ex)
         bot.send_message(my_user_id, str(ex))
 
+    finally:
+        connection.close()
 
 #function for command start
 #delete inline markup: murkup = types.ReplyKeyboardRemove()
