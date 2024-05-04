@@ -29,8 +29,13 @@ try:
 except Exception as ex:
     print('connection isn\'t successful')
 
-
-
+#creating table with users
+# with connection.cursor() as cursor:
+#    create_table_query = "CREATE TABLE users (id int AUTO_INCREMENT," \
+#                         " nick varchar(32)," \
+#                         " ip varchar(32), PRIMARY KEY (id));"
+#    cursor.execute(create_table_query)
+#    print('table created successful')
 
 #create class for races
 class Races():
