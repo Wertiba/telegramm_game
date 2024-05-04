@@ -5,10 +5,11 @@ import telebot
 from telebot import types
 from icecream import ic
 from messages import All_messages as messages
+from config import All_info as config
 
 #create bot and my user id
-my_user_id = 5900045265
-bot = telebot.TeleBot('7177989754:AAFO8VfvNuLfa7hVyszlwZjz6UEL-kJ6I_s')
+my_user_id = config['my_user_id']
+bot = telebot.TeleBot(config['bot_token'])
 #disable ic
 ic.disable()
 
