@@ -1,17 +1,36 @@
 #import modules
 import random
 import telebot
+import pymysql
 
 from telebot import types
 from icecream import ic
 from messages import All_messages as messages
-from config import All_info as config
+from config import *
 
 #create bot and my user id
-my_user_id = config['my_user_id']
-bot = telebot.TeleBot(config['bot_token'])
+my_user_id = my_user_id
+bot = telebot.TeleBot(bot_token)
 #disable ic
 ic.disable()
+
+
+#connection to mysql db
+try:
+    connection = pymysql.connect(
+        host=host,
+        port=port,
+        user=user,
+        password=password,
+        database=db_name,
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    print('connection successful')
+except Exception as ex:
+    print('connection isn\'t successful')
+
+
+
 
 #create class for races
 class Races():
