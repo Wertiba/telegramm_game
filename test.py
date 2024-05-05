@@ -27,5 +27,17 @@ def drop_table(table_name):
         print('drop successful')
 
     connection.close()
-delete_data('users')
 
+def select_all(table_name):
+    with connection.cursor() as cursor:
+        cursor.execute(f'SELECT * FROM {table_name}')
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+        print('select successful')
+
+    connection.close()
+
+
+# delete_data('users')
+# select_all('users')

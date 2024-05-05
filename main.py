@@ -30,10 +30,10 @@ except Exception as ex:
     print(ex)
     bot.send_message(my_user_id, str(ex))
 
-#creating table with users
+# creating table with users
 # with connection.cursor() as cursor:
 #    create_table_query = "CREATE TABLE users (id int AUTO_INCREMENT," \
-#                         " nick varchar(32)," \
+#                         " name varchar(32)," \
 #                         " ip varchar(32), PRIMARY KEY (id));"
 #    cursor.execute(create_table_query)
 #    print('table created successful')
@@ -79,17 +79,6 @@ races_list = [vikings, peoples, nigers, polars, fire_regiments]
 enemies_list = [human, orc, undead, elf]
 
 
-
-#function for delete data
-def delete_data(table_name):
-    with connection.cursor() as cursor:
-        delete_query = f"DELETE FROM {table_name} WHERE nick = 1"
-        cursor.execute(delete_query)
-        connection.commit()
-
-    connection.close()
-# delete_data('users')
-
 #function for select all
 def select_all(cursor):
     ic.enable()
@@ -97,10 +86,12 @@ def select_all(cursor):
     rows = cursor.fetchall()
     for row in rows:
         ic(row)
+    ic.disable()
 
 
 #function for select user's ip
 def select_ip(message):
+    print(str(message.from_user.first_name).lower())
     try:
         with connection.cursor() as cursor:
             select_query = f"SELECT * FROM users WHERE ip = {str(message.chat.id)}"
@@ -112,7 +103,8 @@ def select_ip(message):
 
             #insert query
             if quantity_rows == 0:
-                insert_query = f"INSERT INTO users (nick, ip) VALUES ('1', {str(message.chat.id)});"
+                insert_query = f"INSERT INTO users (name, ip) VALUES ('{str(message.from_user.first_name).lower()}', '{str(message.chat.id)}');"
+                # insert_query = f"INSERT INTO users (name, ip) VALUES ('roman', 2);"
                 cursor.execute(insert_query)
                 connection.commit()
                 print('insert was successful')
