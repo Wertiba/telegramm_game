@@ -86,7 +86,7 @@ def select_all(cursor):
     ic.enable()
     cursor.execute("SELECT * FROM users")
     rows = cursor.fetchall()
-    print('Objects in db:\n\n')
+    print('\nObjects in db:')
     for row in rows:
         ic(row)
     ic.disable()
@@ -122,18 +122,20 @@ def select_ip(message):
         connection.close()
 
 def choise_race(message):
+
     murkup = types.InlineKeyboardMarkup()
     btn1 = types.InlineKeyboardButton(vikings.name, callback_data='choose_vikings')
-    btn2 = types.InlineKeyboardButton(peoples.name, callback_data='choose_vikings')
-    btn3 = types.InlineKeyboardButton(nigers.name, callback_data='choose_vikings')
-    btn4 = types.InlineKeyboardButton(polars.name, callback_data='choose_vikings')
-    btn5 = types.InlineKeyboardButton(fire_regiments.name, callback_data='choose_vikings')
+    btn2 = types.InlineKeyboardButton(peoples.name, callback_data='choose_peoples')
+    btn3 = types.InlineKeyboardButton(nigers.name, callback_data='choose_nigers')
+    btn4 = types.InlineKeyboardButton(polars.name, callback_data='choose_polars')
+    btn5 = types.InlineKeyboardButton(fire_regiments.name, callback_data='choose_fire_regiments')
 
     murkup.row(btn1, btn2)
     murkup.row(btn3, btn4)
     murkup.row(btn5)
 
     bot.send_message(message.chat.id, 'Ок, выбирай рассу)', reply_markup=murkup)
+    bot.register_next_step_handler(message, callback_query)
 
 
 
@@ -174,8 +176,10 @@ def start(message):
     bot.register_next_step_handler(message, callback_query)
 
 
+#callbacks
 @bot.callback_query_handler(func=lambda callback: True)
 def callback_query(callback):
+    # print(callback)
     message = callback.message
     if callback.data == 'bot_info':
         bot.send_message(message.chat.id, 'Это информация о боте')
@@ -190,6 +194,24 @@ def callback_query(callback):
         bot.send_message(message.chat.id, 'Напиши на мой айди)')
 
 
+
+
+
+
+    elif callback.data == 'choose_vikings':
+        bot.send_message(message.chat.id, messages['choose_rase'])
+
+    elif callback.data == 'choose_peoples':
+        bot.send_message(message.chat.id, messages['choose_rase'])
+
+    elif callback.data == 'choose_nigers':
+        bot.send_message(message.chat.id, messages['choose_rase'])
+
+    elif callback.data == 'choose_polars':
+        bot.send_message(message.chat.id, messages['choose_rase'])
+
+    elif callback.data == 'choose_fire_regiments':
+        bot.send_message(message.chat.id, messages['choose_rase'])
 
 
 bot.polling(none_stop=True)
