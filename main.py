@@ -48,6 +48,8 @@ class Races():
         self.health = health
 
 
+
+
 #create class for enemies
 class Enemy():
     def __init__(self, name, power, health):
@@ -82,8 +84,9 @@ enemies_list = [human, orc, undead, elf]
 #function for select all
 def select_all(cursor):
     ic.enable()
-    cursor.execute('SELECT * FROM users')
+    cursor.execute("SELECT * FROM users")
     rows = cursor.fetchall()
+    print('Objects in db:\n\n')
     for row in rows:
         ic(row)
     ic.disable()
@@ -104,7 +107,6 @@ def select_ip(message):
             #insert query
             if quantity_rows == 0:
                 insert_query = f"INSERT INTO users (name, ip) VALUES ('{str(message.from_user.first_name).lower()}', '{str(message.chat.id)}');"
-                # insert_query = f"INSERT INTO users (name, ip) VALUES ('roman', 2);"
                 cursor.execute(insert_query)
                 connection.commit()
                 print('insert was successful')
@@ -118,6 +120,35 @@ def select_ip(message):
 
     finally:
         connection.close()
+
+def choise_race(message):
+    murkup = types.InlineKeyboardMarkup()
+    btn1 = types.InlineKeyboardButton(vikings.name, callback_data='choose_vikings')
+    btn2 = types.InlineKeyboardButton(peoples.name, callback_data='choose_vikings')
+    btn3 = types.InlineKeyboardButton(nigers.name, callback_data='choose_vikings')
+    btn4 = types.InlineKeyboardButton(polars.name, callback_data='choose_vikings')
+    btn5 = types.InlineKeyboardButton(fire_regiments.name, callback_data='choose_vikings')
+
+    murkup.row(btn1, btn2)
+    murkup.row(btn3, btn4)
+    murkup.row(btn5)
+
+    bot.send_message(message.chat.id, 'Ок, выбирай рассу)', reply_markup=murkup)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #function for command start
 #delete inline markup: murkup = types.ReplyKeyboardRemove()
@@ -153,7 +184,7 @@ def callback_query(callback):
         bot.send_message(message.chat.id, 'Вот ссылка на донат')
 
     elif callback.data == 'start_game':
-        bot.send_message(message.chat.id, 'Ок, выбирай рассу)')
+        choise_race(message)
 
     elif callback.data == 'tech_help':
         bot.send_message(message.chat.id, 'Напиши на мой айди)')
