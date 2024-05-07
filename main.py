@@ -128,7 +128,7 @@ def select_ip(message):
     finally:
         connection.close()
 
-def choise_race(message):
+def choise_race_markup(message):
     #add player's object
     global user
     user.name = str(message.chat.first_name).lower()
@@ -152,18 +152,16 @@ def choise_race(message):
     bot.register_next_step_handler(message, callback_query)
 
 
+#functional for callback for choose race
+def choose_race_functional(title, message):
+    global user
+    for obj in races_list:
+        if obj.title == title:
+            user.race = obj.title
+            user.health = obj.health
+            user.power = obj.power
 
-
-
-
-
-
-
-
-
-
-
-
+            bot.send_message(message.chat.id, messages['choose_rase'])
 
 
 #function for command start
@@ -202,7 +200,7 @@ def callback_query(callback):
         bot.send_message(message.chat.id, 'Вот ссылка на донат')
 
     elif callback.data == 'start_game':
-        choise_race(message)
+        choise_race_markup(message)
 
     elif callback.data == 'tech_help':
         bot.send_message(message.chat.id, 'Напиши на мой айди)')
@@ -210,24 +208,19 @@ def callback_query(callback):
 
     #choose race
     elif callback.data == 'choose_vikings':
-        bot.send_message(message.chat.id, messages['choose_rase'])
-        user.race = vikings.title
+        choose_race_functional(vikings.title, message)
 
     elif callback.data == 'choose_peoples':
-        bot.send_message(message.chat.id, messages['choose_rase'])
-        user.race = peoples.title
+        choose_race_functional(peoples.title, message)
 
     elif callback.data == 'choose_nigers':
-        bot.send_message(message.chat.id, messages['choose_rase'])
-        user.race = nigers.title
+        choose_race_functional(nigers.title, message)
 
     elif callback.data == 'choose_polars':
-        bot.send_message(message.chat.id, messages['choose_rase'])
-        user.race = polars.title
+        choose_race_functional(polars.title, message)
 
     elif callback.data == 'choose_fire_regiments':
-        bot.send_message(message.chat.id, messages['choose_rase'])
-        user.race = fire_regiments.title
+        choose_race_functional(fire_regiments.title, message)
 
 
 
