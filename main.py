@@ -58,17 +58,25 @@ class Enemy():
         self.health = health
 
 
+#create player's class
+class User():
+    def __init__(self, name, ip, is_already_reg, race, power, health):
+        self.name = name
+        self.ip = ip
+        self.is_already_reg = is_already_reg
+        self.race = race
+        self.power = power
+        self.health = health
 
-
-
+user = User(None, None, None, None, None, None)
 
 
 #create races objects
-vikings = Races('викинги', 'just_title', 'just_number', '650', '450')
-peoples = Races('современники', 'just_title', 'just_number', '800', '300')
-nigers = Races('негры', 'just_title', 'just_number', '600', '800')
-polars = Races('полярники', 'just_title', 'just_number', '600', '600')
-fire_regiments = Races('огнеполки', 'just_title', 'just_number', '850', '200')
+vikings = Races('викинги', 'vikings', 'just_number', '650', '450')
+peoples = Races('современники', 'peoples', 'just_number', '800', '300')
+nigers = Races('негры', 'nigers', 'just_number', '600', '800')
+polars = Races('полярники', 'polars', 'just_number', '600', '600')
+fire_regiments = Races('огнеполки', 'fire_regiments', 'just_number', '850', '200')
 
 #create enemies objects
 human = Enemy('человек', '400', '300')
@@ -94,7 +102,6 @@ def select_all(cursor):
 
 #function for select user's ip
 def select_ip(message):
-    print(str(message.from_user.first_name).lower())
     try:
         with connection.cursor() as cursor:
             select_query = f"SELECT * FROM users WHERE ip = {str(message.chat.id)}"
@@ -106,7 +113,7 @@ def select_ip(message):
 
             #insert query
             if quantity_rows == 0:
-                insert_query = f"INSERT INTO users (name, ip) VALUES ('{str(message.from_user.first_name).lower()}', '{str(message.chat.id)}');"
+                insert_query = f"INSERT INTO users (name, ip) VALUES ('{user.name}', '{str(message.chat.id)}');"
                 cursor.execute(insert_query)
                 connection.commit()
                 print('insert was successful')
@@ -122,7 +129,14 @@ def select_ip(message):
         connection.close()
 
 def choise_race(message):
+    #add player's object
+    global user
+    user.name = str(message.chat.first_name).lower()
+    user.ip = message.chat.id
+    print(user.name)
 
+
+    #markup
     murkup = types.InlineKeyboardMarkup()
     btn1 = types.InlineKeyboardButton(vikings.name, callback_data='choose_vikings')
     btn2 = types.InlineKeyboardButton(peoples.name, callback_data='choose_peoples')
@@ -170,7 +184,7 @@ def start(message):
     #check ip in db
     select_ip(message)
 
-    bot.send_message(message.chat.id, f'Приветствую тебя, {message.from_user.first_name}')
+    bot.send_message(message.chat.id, f'Приветствую тебя, {message.chat.first_name}')
     bot.send_message(message.chat.id, messages['start_message'], reply_markup=murkup)
 
     bot.register_next_step_handler(message, callback_query)
@@ -194,24 +208,27 @@ def callback_query(callback):
         bot.send_message(message.chat.id, 'Напиши на мой айди)')
 
 
-
-
-
-
+    #choose race
     elif callback.data == 'choose_vikings':
         bot.send_message(message.chat.id, messages['choose_rase'])
+        user.race = vikings.title
 
     elif callback.data == 'choose_peoples':
         bot.send_message(message.chat.id, messages['choose_rase'])
+        user.race = peoples.title
 
     elif callback.data == 'choose_nigers':
         bot.send_message(message.chat.id, messages['choose_rase'])
+        user.race = nigers.title
 
     elif callback.data == 'choose_polars':
         bot.send_message(message.chat.id, messages['choose_rase'])
+        user.race = polars.title
 
     elif callback.data == 'choose_fire_regiments':
         bot.send_message(message.chat.id, messages['choose_rase'])
+        user.race = fire_regiments.title
+
 
 
 bot.polling(none_stop=True)
