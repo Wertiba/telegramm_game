@@ -164,14 +164,47 @@ def choose_race_functional(data, message):
     for race in list_races:
         if race.title == user_race:
             user.race = race.title
-
             user.health = race.health
             user.power = race.power
+
 
             bot.send_message(message.chat.id, messages['choose_rase'])
 
 
     print(user.race, user.power, user.name, user.health, user.is_already_reg, user.ip )
+
+
+def action_functional(data, message):
+    pass
+
+
+
+
+
+
+
+
+
+@bot.message_handler(commands=['action'])
+def action_markup(message):
+    #markup
+    murkup = types.InlineKeyboardMarkup()
+    btn1 = types.InlineKeyboardButton('Вступить в бой', callback_data='action_fight')
+    btn2 = types.InlineKeyboardButton('Торговать', callback_data='action_trade')
+    btn3 = types.InlineKeyboardButton('Что-то ещё', callback_data='action_anything')
+
+    murkup.row(btn1, btn2)
+    murkup.row(btn3)
+
+    bot.send_message(message.chat.id, 'Выберите действие', reply_markup=murkup)
+    bot.register_next_step_handler(message, callback_query)
+
+
+
+
+
+
+
 
 
 
@@ -223,6 +256,9 @@ def callback_query(callback):
     #choose race
     if 'choose_' in callback.data:
         choose_race_functional(callback.data, message)
+
+    if 'action_' in callback.data:
+        action_functional(callback.data, message)
 
 
 
