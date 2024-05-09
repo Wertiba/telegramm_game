@@ -129,12 +129,6 @@ def select_ip(message):
         connection.close()
 
 def choise_race_markup(message):
-    #add player's object
-    global user
-    user.name = str(message.chat.first_name).lower()
-    user.ip = message.chat.id
-
-
     #markup
     murkup = types.InlineKeyboardMarkup()
     btn1 = types.InlineKeyboardButton(vikings.name, callback_data='choose_vikings')
@@ -163,6 +157,8 @@ def choose_race_functional(data, message):
 
     for race in list_races:
         if race.title == user_race:
+            user.name = str(message.chat.first_name).lower()
+            user.ip = message.chat.id
             user.race = race.title
             user.health = race.health
             user.power = race.power
@@ -174,10 +170,18 @@ def choose_race_functional(data, message):
     print(user.race, user.power, user.name, user.health, user.is_already_reg, user.ip )
 
 
+#basic function
 def action_functional(data, message):
-    pass
+    ac = str(data).split('_')[1]
+    print(ac)
+    if ac == 'fight':
+        bot.send_message(message.chat.id, 'вы вступили в бой')
 
+    elif ac == 'trade':
+        bot.send_message(message.chat.id, 'вы начали торгоалю')
 
+    elif ac == 'anything':
+        bot.send_message(message.chat.id, 'какое-то действие')
 
 
 
