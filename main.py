@@ -20,7 +20,7 @@ try:
     connection = pymysql.connect(
         host=host,
         port=port,
-        user=user,
+        user=user_,
         password=password,
         database=db_name,
         cursorclass=pymysql.cursors.DictCursor
@@ -85,8 +85,8 @@ undead = Enemy('нежить', '600', '200')
 elf = Enemy('эльф', '400', '100')
 
 #list with all objects
-races_list = [vikings, peoples, nigers, polars, fire_regiments]
-enemies_list = [human, orc, undead, elf]
+list_races = [vikings, peoples, nigers, polars, fire_regiments]
+list_enemies = [human, orc, undead, elf]
 
 
 #function for select all
@@ -133,7 +133,6 @@ def choise_race_markup(message):
     global user
     user.name = str(message.chat.first_name).lower()
     user.ip = message.chat.id
-    print(user.name)
 
 
     #markup
@@ -153,15 +152,30 @@ def choise_race_markup(message):
 
 
 #functional for callback for choose race
-def choose_race_functional(title, message):
+def choose_race_functional(data, message):
     global user
-    for obj in races_list:
-        if obj.title == title:
-            user.race = obj.title
-            user.health = obj.health
-            user.power = obj.power
+
+    if str(data) == 'choose_fire_regiments':
+        user_race = 'fire_regiments'
+    else:
+        user_race = str(data).split('_')[1]
+
+
+    for race in list_races:
+        if race.title == user_race:
+            user.race = race.title
+
+            user.health = race.health
+            user.power = race.power
 
             bot.send_message(message.chat.id, messages['choose_rase'])
+
+
+    print(user.race, user.power, user.name, user.health, user.is_already_reg, user.ip )
+
+
+
+
 
 
 #function for command start
@@ -207,20 +221,8 @@ def callback_query(callback):
 
 
     #choose race
-    elif callback.data == 'choose_vikings':
-        choose_race_functional(vikings.title, message)
-
-    elif callback.data == 'choose_peoples':
-        choose_race_functional(peoples.title, message)
-
-    elif callback.data == 'choose_nigers':
-        choose_race_functional(nigers.title, message)
-
-    elif callback.data == 'choose_polars':
-        choose_race_functional(polars.title, message)
-
-    elif callback.data == 'choose_fire_regiments':
-        choose_race_functional(fire_regiments.title, message)
+    if 'choose_' in callback.data:
+        choose_race_functional(callback.data, message)
 
 
 

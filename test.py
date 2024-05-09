@@ -41,3 +41,13 @@ def select_all(table_name):
 
 # delete_data('users')
 # select_all('users')
+try:
+    gfsdsafd
+except Exception as ex:
+    print(ex)
+
+
+
+
+
+
