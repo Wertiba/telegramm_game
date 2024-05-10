@@ -52,8 +52,9 @@ class Races():
 
 #create class for enemies
 class Enemy():
-    def __init__(self, name, power, health):
+    def __init__(self, name, title, power, health):
         self.name = name
+        self.title = title
         self.power = power
         self.health = health
 
@@ -79,10 +80,10 @@ polars = Races('полярники', 'polars', 'just_number', '600', '600')
 fire_regiments = Races('огнеполки', 'fire_regiments', 'just_number', '850', '200')
 
 #create enemies objects
-human = Enemy('человек', '400', '300')
-orc = Enemy('орк', '150', '800')
-undead = Enemy('нежить', '600', '200')
-elf = Enemy('эльф', '400', '100')
+human = Enemy('человек', 'human', '400', '300')
+orc = Enemy('орк','orc' , '150', '800')
+undead = Enemy('нежить','undead' , '600', '200')
+elf = Enemy('эльф','elf' , '400', '100')
 
 #list with all objects
 list_races = [vikings, peoples, nigers, polars, fire_regiments]
@@ -173,7 +174,6 @@ def choose_race_functional(data, message):
 #basic function
 def action_functional(data, message):
     ac = str(data).split('_')[1]
-    print(ac)
     if ac == 'fight':
         bot.send_message(message.chat.id, 'вы вступили в бой')
 
@@ -191,6 +191,9 @@ def action_functional(data, message):
 
 @bot.message_handler(commands=['action'])
 def action_markup(message):
+    #get enemy
+    mob = random.choice(list_enemies)
+    print(mob.title)
     #markup
     murkup = types.InlineKeyboardMarkup()
     btn1 = types.InlineKeyboardButton('Вступить в бой', callback_data='action_fight')
@@ -200,6 +203,7 @@ def action_markup(message):
     murkup.row(btn1, btn2)
     murkup.row(btn3)
 
+    bot.send_message(message.chat.id, f'Вы встретили {str(mob.name).capitalize()}')
     bot.send_message(message.chat.id, 'Выберите действие', reply_markup=murkup)
     bot.register_next_step_handler(message, callback_query)
 
