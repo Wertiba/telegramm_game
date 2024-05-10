@@ -59,17 +59,26 @@ class Enemy():
         self.health = health
 
 
-
-
+    #fight
     def fight(self):
+        ic.enable()
+        ic(user.health)
+        ic(user.power)
+        ic(self.health)
+        ic(self.power)
+        ic.disable()
+
+
+
+
         if (user.health - self.power) > (self.health - user.power):
-            return True
+            return 'user_won'
 
         elif (user.health - self.power) > (self.health - user.power):
-            return None
+            return 'draw'
 
         else:
-            return False
+            return 'user_lost'
 
 
 
@@ -208,7 +217,7 @@ def action_functional(data, message):
         bot.send_message(message.chat.id, 'какое-то действие')
 
 
-
+    bot.clear_step_handler_by_chat_id(chat_id=message.chat.id)
 
 
 
