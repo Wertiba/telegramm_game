@@ -59,31 +59,47 @@ class Enemy():
         self.health = health
 
 
+
+
+    def fight(self):
+        if (user.health - self.power) > (self.health - user.power):
+            return True
+
+        elif (user.health - self.power) > (self.health - user.power):
+            return None
+
+        else:
+            return False
+
+
+
+
 #create player's class
 class User():
-    def __init__(self, name, ip, is_already_reg, race, power, health):
+    def __init__(self, name, ip, is_already_reg, race, power, health, enemy):
         self.name = name
         self.ip = ip
         self.is_already_reg = is_already_reg
         self.race = race
         self.power = power
         self.health = health
+        self.enemy = enemy
 
-user = User(None, None, None, None, None, None)
+user = User(None, None, None, None, None, None, None)
 
 
 #create races objects
-vikings = Races('викинги', 'vikings', 'just_number', '650', '450')
-peoples = Races('современники', 'peoples', 'just_number', '800', '300')
-nigers = Races('негры', 'nigers', 'just_number', '600', '800')
-polars = Races('полярники', 'polars', 'just_number', '600', '600')
-fire_regiments = Races('огнеполки', 'fire_regiments', 'just_number', '850', '200')
+vikings = Races('викинги', 'vikings', 'just_number', 650, 450)
+peoples = Races('современники', 'peoples', 'just_number', 800, 300)
+nigers = Races('негры', 'nigers', 'just_number', 600, 800)
+polars = Races('полярники', 'polars', 'just_number', 600, 600)
+fire_regiments = Races('огнеполки', 'fire_regiments', 'just_number', 850, 200)
 
 #create enemies objects
-human = Enemy('человек', 'human', '400', '300')
-orc = Enemy('орк','orc' , '150', '800')
-undead = Enemy('нежить','undead' , '600', '200')
-elf = Enemy('эльф','elf' , '400', '100')
+human = Enemy('человек', 'human', 400, 300)
+orc = Enemy('орк','orc' , 150, 800)
+undead = Enemy('нежить','undead' , 600, 200)
+elf = Enemy('эльф','elf' , 400, 100)
 
 #list with all objects
 list_races = [vikings, peoples, nigers, polars, fire_regiments]
@@ -158,6 +174,7 @@ def choose_race_functional(data, message):
 
     for race in list_races:
         if race.title == user_race:
+            #add attributes
             user.name = str(message.chat.first_name).lower()
             user.ip = message.chat.id
             user.race = race.title
@@ -166,15 +183,22 @@ def choose_race_functional(data, message):
 
 
             bot.send_message(message.chat.id, messages['choose_rase'])
+            bot.clear_step_handler_by_chat_id(chat_id=message.chat.id)
 
-
-    print(user.race, user.power, user.name, user.health, user.is_already_reg, user.ip )
+    #print data
+    ic.enable()
+    ic(user.race, user.power, user.name, user.health, user.is_already_reg, user.ip )
+    ic.disable()
 
 
 #basic function
 def action_functional(data, message):
     ac = str(data).split('_')[1]
     if ac == 'fight':
+        print(user.enemy.fight())
+
+
+
         bot.send_message(message.chat.id, 'вы вступили в бой')
 
     elif ac == 'trade':
@@ -191,9 +215,11 @@ def action_functional(data, message):
 
 @bot.message_handler(commands=['action'])
 def action_markup(message):
+    global user
     #get enemy
     mob = random.choice(list_enemies)
-    print(mob.title)
+    user.enemy = mob
+
     #markup
     murkup = types.InlineKeyboardMarkup()
     btn1 = types.InlineKeyboardButton('Вступить в бой', callback_data='action_fight')
@@ -246,7 +272,6 @@ def start(message):
 #callbacks
 @bot.callback_query_handler(func=lambda callback: True)
 def callback_query(callback):
-    # print(callback)
     message = callback.message
     if callback.data == 'bot_info':
         bot.send_message(message.chat.id, 'Это информация о боте')
