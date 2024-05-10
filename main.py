@@ -66,17 +66,14 @@ class Enemy():
         ic.disable()
 
 
-
-
         if (user.health - self.power) > (self.health - user.power):
-            return 'user_won'
+            data = 'Поздравляю! Вы одержали победу!'
 
         elif (user.health - self.power) > (self.health - user.power):
-            return 'draw'
+            data = 'Вы проиграли('
 
-        else:
-            return 'user_lost'
 
+        return data
 
 
 
@@ -205,11 +202,7 @@ def choose_race_functional(data, message):
 def action_functional(data, message):
     ac = str(data).split('_')[1]
     if ac == 'fight':
-        print(user.enemy.fight())
-
-
-
-        bot.send_message(message.chat.id, 'вы вступили в бой')
+        bot.send_message(message.chat.id, str(user.enemy.fight()))
 
     elif ac == 'trade':
         bot.send_message(message.chat.id, 'вы начали торгоалю')
