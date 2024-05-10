@@ -62,10 +62,7 @@ class Enemy():
     #fight
     def fight(self):
         ic.enable()
-        ic(user.health)
-        ic(user.power)
-        ic(self.health)
-        ic(self.power)
+        ic(user.health, self.power, self.health, user.power)
         ic.disable()
 
 
@@ -152,7 +149,10 @@ def select_ip(message):
         bot.send_message(my_user_id, str(ex))
 
     finally:
-        connection.close()
+        try:
+            connection.close()
+        except pymysql.err.Error:
+            pass
 
 def choise_race_markup(message):
     #markup
@@ -193,6 +193,7 @@ def choose_race_functional(data, message):
 
             bot.send_message(message.chat.id, messages['choose_rase'])
             bot.clear_step_handler_by_chat_id(chat_id=message.chat.id)
+            action_markup(message)
 
     #print data
     ic.enable()
@@ -222,7 +223,6 @@ def action_functional(data, message):
 
 
 
-@bot.message_handler(commands=['action'])
 def action_markup(message):
     global user
     #get enemy
@@ -276,6 +276,12 @@ def start(message):
     bot.send_message(message.chat.id, messages['start_message'], reply_markup=murkup)
 
     bot.register_next_step_handler(message, callback_query)
+
+
+#function for get enemy after the choose race
+@bot.message_handler(commands=['action'])
+def first_enemy(message):
+    action_markup(message)
 
 
 #callbacks
