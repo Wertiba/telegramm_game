@@ -4,7 +4,7 @@ from config import *
 connection = pymysql.connect(
         host=host,
         port=port,
-        user=user,
+        user=user_,
         password=password,
         database=db_name,
         cursorclass=pymysql.cursors.DictCursor
@@ -41,11 +41,6 @@ def select_all(table_name):
 
 # delete_data('users')
 # select_all('users')
-try:
-    gfsdsafd
-except Exception as ex:
-    print(ex)
-
 
 
 

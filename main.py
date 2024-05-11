@@ -198,23 +198,6 @@ def choose_race_functional(data, message):
     ic.disable()
 
 
-#basic function
-def action_functional(data, message):
-    ac = str(data).split('_')[1]
-    if ac == 'fight':
-        bot.send_message(message.chat.id, str(user.enemy.fight()))
-
-    elif ac == 'trade':
-        bot.send_message(message.chat.id, 'вы начали торгоалю')
-
-    elif ac == 'anything':
-        bot.send_message(message.chat.id, 'какое-то действие')
-
-
-    bot.clear_step_handler_by_chat_id(chat_id=message.chat.id)
-
-
-
 
 def action_markup(message):
     global user
@@ -236,7 +219,39 @@ def action_markup(message):
     bot.register_next_step_handler(message, callback_query)
 
 
+#basic function
+def action_functional(data, message):
+    ac = str(data).split('_')[1]
+    if ac == 'fight':
+        #create markup
+        murkup = types.InlineKeyboardMarkup()
+        btn1 = types.InlineKeyboardButton('Идти дальше', callback_data='move_on')
+        btn2 = types.InlineKeyboardButton('Вернуться в деревню', callback_data='go_home')
 
+        murkup.row(btn1, btn2)
+
+        bot.send_message(message.chat.id, str(user.enemy.fight()), reply_markup=murkup)
+
+    elif ac == 'trade':
+        bot.send_message(message.chat.id, 'вы начали торгоалю')
+
+    elif ac == 'anything':
+        bot.send_message(message.chat.id, 'какое-то действие')
+
+
+    bot.clear_step_handler_by_chat_id(chat_id=message.chat.id)
+
+
+#markup for mine own village
+def home_markup(message):
+    #markup
+    murkup = types.InlineKeyboardMarkup()
+    btn1 = types.InlineKeyboardButton('Отправиться в поход', callback_data='move_on')
+    btn2 = types.InlineKeyboardButton('Инвентарь', callback_data='mine_inventory')
+
+    murkup.row(btn1, btn2)
+
+    bot.send_message(message.chat.id, 'Вы вернулись в свою деревню', reply_markup=murkup)
 
 
 
@@ -292,6 +307,16 @@ def callback_query(callback):
 
     elif callback.data == 'tech_help':
         bot.send_message(message.chat.id, 'Напиши на мой айди)')
+
+
+    elif callback.data == 'go_home':
+        home_markup(callback.message)
+
+    elif callback.data == 'move_on':
+        action_markup(callback.message)
+
+    elif callback.data == 'mine_inventory':
+        bot.send_message(message.chat.id, 'это ваш инвентарь')
 
 
     #choose race
