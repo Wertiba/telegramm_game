@@ -326,6 +326,13 @@ def start(message):
 def first_enemy(message):
     action_markup(message)
 
+#get and print info
+@bot.message_handler(commands=['info'])
+def print_info(message):
+    bot.send_message(message.chat.id, f'Ваше здоровье: {user.health}\n'
+                                      f'Ваш урон: {user.power}\n'
+                                      f'Ваш баланс: {user.ballance}')
+
 
 #callbacks
 @bot.callback_query_handler(func=lambda callback: True)
