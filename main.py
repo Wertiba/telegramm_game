@@ -62,12 +62,13 @@ class Enemy():
     #fight
     def fight(self):
         ic.enable()
-        ic(user.health, self.power, self.health, user.power)
+        ic(user.health, self.power, self.health, user.power, user.ballance)
         ic.disable()
 
 
         if (user.health - self.power) > (self.health - user.power):
             data = 'Поздравляю! Вы одержали победу!'
+            user.ballance += 2
 
         elif (user.health - self.power) > (self.health - user.power):
             data = 'Вы проиграли('
@@ -75,11 +76,29 @@ class Enemy():
 
         return data
 
+    #trade
+    def trade_functional(self, call):
+        ic.enable()
+        ic(user.health, user.power)
+        data = str(call.data).split('_')[1]
+        user.ballance -= 5
+        if data == 'force':
+            user.power += 50
+
+        elif data == 'hill':
+            user.health += 50
+
+
+        ic(user.health, user.power)
+        ic.disable()
+
+        bot.send_message(call.message.chat.id, 'Успешно преобретено. Чтобы вернуться в деревню жмите на кнопку выше')
+
 
 
 #create player's class
 class User():
-    def __init__(self, name, ip, is_already_reg, race, power, health, enemy):
+    def __init__(self, name, ip, is_already_reg, race, power, health, enemy, ballance):
         self.name = name
         self.ip = ip
         self.is_already_reg = is_already_reg
@@ -87,8 +106,9 @@ class User():
         self.power = power
         self.health = health
         self.enemy = enemy
+        self.ballance = ballance
 
-user = User(None, None, None, None, None, None, None)
+user = User(None, None, None, None, None, None, None, None)
 
 
 #create races objects
@@ -164,7 +184,7 @@ def choise_race_markup(message):
     murkup.row(btn3, btn4)
     murkup.row(btn5)
 
-    bot.send_message(message.chat.id, 'Ок, выбирай рассу)', reply_markup=murkup)
+    bot.send_message(message.chat.id, 'Ок, выбирай расу', reply_markup=murkup)
     bot.register_next_step_handler(message, callback_query)
 
 
@@ -186,6 +206,7 @@ def choose_race_functional(data, message):
             user.race = race.title
             user.health = race.health
             user.power = race.power
+            user.ballance = 10
 
 
             bot.send_message(message.chat.id, messages['choose_rase'])
@@ -221,25 +242,39 @@ def action_markup(message):
 
 #basic function
 def action_functional(data, message):
-    ac = str(data).split('_')[1]
-    if ac == 'fight':
-        #create markup
-        murkup = types.InlineKeyboardMarkup()
-        btn1 = types.InlineKeyboardButton('Идти дальше', callback_data='move_on')
-        btn2 = types.InlineKeyboardButton('Вернуться в деревню', callback_data='go_home')
+    action = str(data).split('_')[1]
 
-        murkup.row(btn1, btn2)
+    # create markup
+    murkup = types.InlineKeyboardMarkup()
+    btn1 = types.InlineKeyboardButton('Идти дальше', callback_data='move_on')
+    btn2 = types.InlineKeyboardButton('Вернуться в деревню', callback_data='go_home')
 
+    murkup.row(btn1, btn2)
+
+    if action == 'fight':
         bot.send_message(message.chat.id, str(user.enemy.fight()), reply_markup=murkup)
 
-    elif ac == 'trade':
-        bot.send_message(message.chat.id, 'вы начали торгоалю')
+    elif action == 'trade':
+        btn3 = types.InlineKeyboardButton('Купить зелье силы', callback_data='buy_force_spell')
+        btn4 = types.InlineKeyboardButton('Купить зелье исцеления', callback_data='buy_hill_spell')
+        murkup.row(btn3, btn4)
 
-    elif ac == 'anything':
+        bot.send_message(message.chat.id, f'Торговые предложения {str(user.enemy.name).capitalize()}', reply_markup=murkup)
+
+    elif action == 'anything':
         bot.send_message(message.chat.id, 'какое-то действие')
 
 
     bot.clear_step_handler_by_chat_id(chat_id=message.chat.id)
+
+
+
+
+
+
+
+
+
 
 
 #markup for mine own village
@@ -325,6 +360,9 @@ def callback_query(callback):
 
     if 'action_' in callback.data:
         action_functional(callback.data, message)
+
+    if 'buy_' in callback.data:
+        user.enemy.trade_functional(callback)
 
 
 
