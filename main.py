@@ -140,7 +140,11 @@ class User():
 
         else:
             for i in self.inventory:
-                bot.send_message(message.chat.id, f'{i}')
+                if i == self.inventory[-1]:
+                    bot.send_message(message.chat.id, f'{i}', reply_markup=murkup)
+
+                else:
+                    bot.send_message(message.chat.id, f'{i}')
 
 
 
