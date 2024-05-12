@@ -52,11 +52,12 @@ class Races():
 
 #create class for enemies
 class Enemy():
-    def __init__(self, name, title, power, health):
+    def __init__(self, name, title, power, health, is_tradyble):
         self.name = name
         self.title = title
         self.power = power
         self.health = health
+        self.is_tradyble = is_tradyble
 
 
     #fight
@@ -81,18 +82,27 @@ class Enemy():
         ic.enable()
         ic(user.health, user.power)
         data = str(call.data).split('_')[1]
-        user.ballance -= 5
-        if data == 'force':
-            user.power += 50
 
-        elif data == 'hill':
-            user.health += 50
+        if user.ballance - 5 >= 0:
+            user.ballance -= 5
+            if data == 'force':
+                user.power += 50
+
+            elif data == 'hill':
+                user.health += 50
+
+            bot.send_message(call.message.chat.id, 'Успешно преобретено. Чтобы вернуться в деревню жмите на кнопку выше')
+
+        else:
+            bot.send_message(call.message.chat.id, 'У вас не хватает денег!')
+
+
 
 
         ic(user.health, user.power)
         ic.disable()
 
-        bot.send_message(call.message.chat.id, 'Успешно преобретено. Чтобы вернуться в деревню жмите на кнопку выше')
+
 
 
 
@@ -119,10 +129,10 @@ polars = Races('полярники', 'polars', 'just_number', 600, 600)
 fire_regiments = Races('огнеполки', 'fire_regiments', 'just_number', 850, 200)
 
 #create enemies objects
-human = Enemy('человек', 'human', 400, 300)
-orc = Enemy('орк','orc' , 150, 800)
-undead = Enemy('нежить','undead' , 600, 200)
-elf = Enemy('эльф','elf' , 400, 100)
+human = Enemy('человек', 'human', 400, 300, True)
+orc = Enemy('орк','orc' , 150, 800, False)
+undead = Enemy('нежить','undead' , 600, 200, False)
+elf = Enemy('эльф','elf' , 400, 100, False)
 
 #list with all objects
 list_races = [vikings, peoples, nigers, polars, fire_regiments]
@@ -365,10 +375,10 @@ def callback_query(callback):
     if 'choose_' in callback.data:
         choose_race_functional(callback.data, message)
 
-    if 'action_' in callback.data:
+    elif 'action_' in callback.data:
         action_functional(callback.data, message)
 
-    if 'buy_' in callback.data:
+    elif 'buy_' in callback.data:
         user.enemy.trade_functional(callback)
 
 
