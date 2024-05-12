@@ -240,7 +240,7 @@ def action_markup(message):
     murkup = types.InlineKeyboardMarkup()
     btn1 = types.InlineKeyboardButton('Вступить в бой', callback_data='action_fight')
     btn2 = types.InlineKeyboardButton('Торговать', callback_data='action_trade')
-    btn3 = types.InlineKeyboardButton('Что-то ещё', callback_data='action_anything')
+    btn3 = types.InlineKeyboardButton('Пройти мимо', callback_data='action_skip')
 
     murkup.row(btn1, btn2)
     murkup.row(btn3)
@@ -276,22 +276,11 @@ def action_functional(data, message):
             bot.send_message(message.chat.id, f'С этим мобом торговля невозможна', reply_markup=murkup)
 
 
-
-
-
-
-    elif action == 'anything':
-        bot.send_message(message.chat.id, 'какое-то действие')
+    elif action == 'skip':
+        action_markup(message)
 
 
     bot.clear_step_handler_by_chat_id(chat_id=message.chat.id)
-
-
-
-
-
-
-
 
 
 
