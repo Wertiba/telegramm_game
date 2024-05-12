@@ -93,6 +93,12 @@ class Enemy():
             elif data == 'hill':
                 user.health += 50
 
+            elif data == 'key':
+                user.inventory.append('key')
+
+
+
+
             bot.send_message(call.message.chat.id, 'Успешно преобретено. Чтобы вернуться в деревню жмите на кнопку выше')
 
         else:
@@ -123,28 +129,18 @@ class User():
 
     #func for view inventory
     def mine_inventory(self, message):
+        # markup
+        murkup = types.InlineKeyboardMarkup()
+        btn1 = types.InlineKeyboardButton('Отправиться в поход', callback_data='move_on')
+
+        murkup.row(btn1)
+
         if len(self.inventory) == 0:
-            #markup
-            murkup = types.InlineKeyboardMarkup()
-            btn1 = types.InlineKeyboardButton('Отправиться в поход', callback_data='move_on')
-
-            murkup.row(btn1)
-
             bot.send_message(message.chat.id, 'Ваш инвентарь пуст', reply_markup=murkup)
 
         else:
             for i in self.inventory:
                 bot.send_message(message.chat.id, f'{i}')
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -303,7 +299,9 @@ def action_functional(data, message):
         if user.enemy.is_tradyble == True:
             btn3 = types.InlineKeyboardButton('Купить зелье силы', callback_data='buy_force_spell')
             btn4 = types.InlineKeyboardButton('Купить зелье исцеления', callback_data='buy_hill_spell')
+            btn5 = types.InlineKeyboardButton('Купить магический ключ', callback_data='buy_key_magical')
             murkup.row(btn3, btn4)
+            murkup.row(btn5)
 
             bot.send_message(message.chat.id, f'Торговые предложения {str(user.enemy.name).capitalize()}', reply_markup=murkup)
 
