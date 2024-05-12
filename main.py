@@ -265,11 +265,20 @@ def action_functional(data, message):
         bot.send_message(message.chat.id, str(user.enemy.fight()), reply_markup=murkup)
 
     elif action == 'trade':
-        btn3 = types.InlineKeyboardButton('Купить зелье силы', callback_data='buy_force_spell')
-        btn4 = types.InlineKeyboardButton('Купить зелье исцеления', callback_data='buy_hill_spell')
-        murkup.row(btn3, btn4)
+        if user.enemy.is_tradyble == True:
+            btn3 = types.InlineKeyboardButton('Купить зелье силы', callback_data='buy_force_spell')
+            btn4 = types.InlineKeyboardButton('Купить зелье исцеления', callback_data='buy_hill_spell')
+            murkup.row(btn3, btn4)
 
-        bot.send_message(message.chat.id, f'Торговые предложения {str(user.enemy.name).capitalize()}', reply_markup=murkup)
+            bot.send_message(message.chat.id, f'Торговые предложения {str(user.enemy.name).capitalize()}', reply_markup=murkup)
+
+        else:
+            bot.send_message(message.chat.id, f'С этим мобом торговля невозможна', reply_markup=murkup)
+
+
+
+
+
 
     elif action == 'anything':
         bot.send_message(message.chat.id, 'какое-то действие')
