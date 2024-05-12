@@ -52,12 +52,13 @@ class Races():
 
 #create class for enemies
 class Enemy():
-    def __init__(self, name, title, power, health, is_tradyble):
+    def __init__(self, name, title, power, health, is_tradyble, reward):
         self.name = name
         self.title = title
         self.power = power
         self.health = health
         self.is_tradyble = is_tradyble
+        self.reward = reward
 
 
     #fight
@@ -68,8 +69,9 @@ class Enemy():
 
 
         if (user.health - self.power) > (self.health - user.power):
-            data = 'Поздравляю! Вы одержали победу!'
-            user.ballance += 2
+            data = f'Поздравляю! Вы одержали победу!\n' \
+                   f'Вы получили {self.reward}'
+            user.ballance += self.reward
 
         elif (user.health - self.power) > (self.health - user.power):
             data = 'Вы проиграли('
@@ -129,10 +131,10 @@ polars = Races('полярники', 'polars', 'just_number', 600, 600)
 fire_regiments = Races('огнеполки', 'fire_regiments', 'just_number', 850, 200)
 
 #create enemies objects
-human = Enemy('человек', 'human', 400, 300, True)
-orc = Enemy('орк','orc' , 150, 800, False)
-undead = Enemy('нежить','undead' , 600, 200, False)
-elf = Enemy('эльф','elf' , 400, 100, False)
+human = Enemy('человек', 'human', 400, 300, True, 0)
+orc = Enemy('орк','orc' , 150, 800, False, 3)
+undead = Enemy('нежить','undead' , 600, 200, False, 3)
+elf = Enemy('эльф','elf' , 400, 100, False, 1)
 
 #list with all objects
 list_races = [vikings, peoples, nigers, polars, fire_regiments]
