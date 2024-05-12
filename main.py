@@ -110,7 +110,7 @@ class Enemy():
 
 #create player's class
 class User():
-    def __init__(self, name, ip, is_already_reg, race, power, health, enemy, ballance):
+    def __init__(self, name, ip, is_already_reg, race, power, health, enemy, ballance, inventory):
         self.name = name
         self.ip = ip
         self.is_already_reg = is_already_reg
@@ -119,8 +119,41 @@ class User():
         self.health = health
         self.enemy = enemy
         self.ballance = ballance
+        self.inventory = inventory
 
-user = User(None, None, None, None, None, None, None, None)
+    #func for view inventory
+    def mine_inventory(self, message):
+        if len(self.inventory) == 0:
+            #markup
+            murkup = types.InlineKeyboardMarkup()
+            btn1 = types.InlineKeyboardButton('Отправиться в поход', callback_data='move_on')
+
+            murkup.row(btn1)
+
+            bot.send_message(message.chat.id, 'Ваш инвентарь пуст', reply_markup=murkup)
+
+        else:
+            for i in self.inventory:
+                bot.send_message(message.chat.id, f'{i}')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+user = User(None, None, None, None, None, None, None, None, [])
 
 
 #create races objects
@@ -286,7 +319,6 @@ def action_functional(data, message):
 
 
 
-
 #markup for mine own village
 def home_markup(message):
     #markup
@@ -297,9 +329,6 @@ def home_markup(message):
     murkup.row(btn1, btn2)
 
     bot.send_message(message.chat.id, 'Вы вернулись в свою деревню', reply_markup=murkup)
-
-
-
 
 
 
@@ -368,7 +397,7 @@ def callback_query(callback):
         action_markup(callback.message)
 
     elif callback.data == 'mine_inventory':
-        bot.send_message(message.chat.id, 'это ваш инвентарь')
+        user.mine_inventory(message)
 
 
     #choose race
